@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="city_search_placeholder">Enter city name (at least 2 chars)</string>
 </resources>

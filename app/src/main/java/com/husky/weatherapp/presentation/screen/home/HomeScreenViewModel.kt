@@ -4,6 +4,7 @@ import android.location.Location
 import androidx.lifecycle.viewModelScope
 import com.husky.weatherapp.data.repository.WeatherRepository
 import com.husky.weatherapp.data.system.LocationService
+import com.husky.weatherapp.domain.usecase.SearchForCityList
 import com.husky.weatherapp.presentation.base.BaseViewModel
 import com.husky.weatherapp.presentation.navigation.NavigationController
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +13,8 @@ import kotlinx.coroutines.launch
 class HomeScreenViewModel(
     private val navigationController: NavigationController,
     private val repository: WeatherRepository,
-    private val locationProvider: LocationService
+    private val locationProvider: LocationService,
+    private val searchForCityList: SearchForCityList,
 ) : BaseViewModel<UIStateHomeScreen, UIEventHomeScreen>() {
 
     override fun getDefaultUIState(): UIStateHomeScreen = DEFAULT_UI_STATE
@@ -30,7 +32,7 @@ class HomeScreenViewModel(
                 println(newLocation)
                 if (canUpdateLocation(newLocation)) {
                     newState = uiState.copy(currentLocation = newLocation)
-                    loadCurrentForecast(newLocation)
+//                    loadCurrentForecast(newLocation)
                 } else {
                     println("Location is the same")
                 }
@@ -51,23 +53,29 @@ class HomeScreenViewModel(
 
     override fun onEvent(event: UIEventHomeScreen) {
         when (event) {
-            UIEventHomeScreen.Placeholder -> {
-//                navigationController.navigateTo(NavigationRoute.WeatherDetailsRoute())
-
-            }
+            is UIEventHomeScreen.CityQuery -> fetchCityLocations(event.query)
         }
     }
 
-    private fun loadCurrentForecast(location: Location) {
+
+    private fun fetchCityLocations(cityQuery: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = repository.getCurrentWeather(location.latitude, location.longitude)
-            result.onSuccess {
-                println("Location loaded : $it")
-            }
-            result.onFailure {
-                println("Location failure : $it")
+            val result = searchForCityList.invoke(cityQuery)
+            result.onSuccess { res ->
+                res.forEach {
+                    println("${it.admin1} ,${it.admin2}")
+                }
             }
         }
+//        viewModelScope.launch(Dispatchers.IO) {
+//            val result = repository.getCurrentWeather(location.latitude, location.longitude)
+//            result.onSuccess {
+//                println("Location loaded : $it")
+//            }
+//            result.onFailure {
+//                println("Location failure : $it")
+//            }
+//        }
     }
 
 

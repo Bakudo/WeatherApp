@@ -9,18 +9,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.unit.dp
+import com.husky.weatherapp.presentation.screen.ui.SearchBarRow
+import com.husky.weatherapp.presentation.screen.ui.UISearchEvent
 
 @Composable
 fun HomeScreenContent(uiState: UIStateHomeScreen, onEvent: OnUIEventHomeScreen) {
-    Column {
-        Text("This is home screen with state : $uiState")
+    Column(Modifier.background(color = Green.copy(.3f))) {
+
+        SearchBarRow(uiState.cityQuery) { searchEvent ->
+            when (searchEvent) {
+                UISearchEvent.OnClearClicked -> {}
+                is UISearchEvent.UserInput -> onEvent(UIEventHomeScreen.CityQuery(searchEvent.query))
+            }
+        }
+
         Box(
             Modifier
                 .size(60.dp)
                 .background(color = Color.Red.copy(.4f))
                 .clickable {
-                    onEvent(UIEventHomeScreen.Placeholder)
+                    onEvent(UIEventHomeScreen.CityQuery(""))
                 })
     }
 }
