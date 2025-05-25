@@ -9,4 +9,5 @@
     <string name="date">Date</string>
     <string name="mintemp">min</string>
     <string name="maxtemp">max</string>
+    <string name="something_wend_wrong">Error occured (click to dismiss)</string>
 </resources>

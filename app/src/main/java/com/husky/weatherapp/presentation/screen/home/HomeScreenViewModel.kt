@@ -10,6 +10,7 @@ import com.husky.weatherapp.domain.usecase.SearchForCityList
 import com.husky.weatherapp.presentation.base.BaseViewModel
 import com.husky.weatherapp.presentation.navigation.NavigationController
 import com.husky.weatherapp.presentation.navigation.route.NavigationRoute
+import com.husky.weatherapp.presentation.navigation.route.NavigationRoute.*
 import com.husky.weatherapp.presentation.navigation.route.WeatherParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,6 +44,7 @@ class HomeScreenViewModel(
 
             }
             location.onFailure {
+                newState = uiState.copy(dataState = DataState.ERROR("Problem with fetching location"))
                 println(it)
             }
         }
@@ -98,7 +100,7 @@ class HomeScreenViewModel(
             is UIEventHomeScreen.ClickedOnCurrentWeather -> {
                 uiState.selectedCity?.let {
                     navigationController.navigateTo(
-                        NavigationRoute.WeatherDetailsRoute(
+                        WeatherDetailsRoute(
                             detailParams = WeatherParams(
                                 location = it,
                                 weather = uiState.currentWeather
@@ -107,6 +109,11 @@ class HomeScreenViewModel(
                     )
                 }
             }
+
+            UIEventHomeScreen.ErrorDismissRequest -> {
+                newState = uiState.copy(dataState = DataState.IDLE)
+            }
+
         }
     }
 
@@ -124,6 +131,10 @@ class HomeScreenViewModel(
                     newState = uiState.copy(dataState = DataState.IDLE)
                     println("Weather $it")
                 }
+                weather.onFailure {exception->
+                    println("Fetch weather error : $exception")
+                    newState = uiState.copy(dataState = DataState.ERROR("$exception"))
+                }
             }
         }
     }
@@ -133,6 +144,9 @@ class HomeScreenViewModel(
             val result = searchForCityList.invoke(cityQuery)
             result.onSuccess { cities ->
                 newState = uiState.copy(citiesFromQuery = cities)
+            }
+            result.onFailure {exception->
+                println(exception)
             }
         }
     }

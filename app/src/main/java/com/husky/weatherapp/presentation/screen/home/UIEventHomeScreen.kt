@@ -6,6 +6,7 @@ sealed interface UIEventHomeScreen {
     data class CityQuery(val query: String) : UIEventHomeScreen
     data class CitySelected(val cityId: CityId) : UIEventHomeScreen
     data class ClickedOnCurrentWeather(val cityId: CityId) : UIEventHomeScreen
+    data object ErrorDismissRequest : UIEventHomeScreen
 }
 
 typealias OnUIEventHomeScreen = (UIEventHomeScreen) -> Unit
