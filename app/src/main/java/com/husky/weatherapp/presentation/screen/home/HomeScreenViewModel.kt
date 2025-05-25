@@ -3,7 +3,6 @@ package com.husky.weatherapp.presentation.screen.home
 import android.location.Location
 import androidx.lifecycle.viewModelScope
 import com.husky.weatherapp.data.system.LocationService
-import com.husky.weatherapp.domain.entity.WeatherDetailsEntity
 import com.husky.weatherapp.domain.model.CurrentWeatherForecast
 import com.husky.weatherapp.domain.model.DailyForecast
 import com.husky.weatherapp.domain.usecase.GetWeatherDataByLocationUseCase
@@ -37,7 +36,7 @@ class HomeScreenViewModel(
                 println(newLocation)
                 if (canUpdateLocation(newLocation)) {
                     newState = uiState.copy(currentLocation = newLocation)
-//                    loadCurrentForecast(newLocation)
+                    loadCurrentForecast(newLocation)
                 } else {
                     println("Location is the same")
                 }
@@ -45,6 +44,24 @@ class HomeScreenViewModel(
             }
             location.onFailure {
                 println(it)
+            }
+        }
+    }
+
+    fun loadCurrentForecast(location: Location) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = getWeatherForCity.locationOnly(location)
+            result.onSuccess {
+                println("Location loaded : $it")
+                newState =
+                    uiState.copy(
+                        currentWeather = it.current,
+                        forecastedWeather = it.daily?.toObjectsList() ?: emptyList()
+                    )
+                println("Weather $it")
+            }
+            result.onFailure {
+                println("Location failure : $it")
             }
         }
     }
@@ -64,25 +81,28 @@ class HomeScreenViewModel(
             }
 
             is UIEventHomeScreen.CitySelected -> {
-                uiState.citiesFromQuery.firstOrNull { it.id == event.cityId.id }?.let { selectedCity ->
-                    newState = uiState.copy(
-                        selectedCity = selectedCity,
-                        cityQuery = null,
-                        citiesFromQuery = emptyList()
-                    )
-                    println("City selected: ${selectedCity.getDisplayName()}")
-                    fetchWeatherForSelectedCity()
-                }
+                uiState.citiesFromQuery.firstOrNull { it.id == event.cityId.id }
+                    ?.let { selectedCity ->
+                        newState = uiState.copy(
+                            selectedCity = selectedCity,
+                            cityQuery = null,
+                            citiesFromQuery = emptyList()
+                        )
+                        println("City selected: ${selectedCity.getDisplayName()}")
+                        fetchWeatherForSelectedCity()
+                    }
             }
 
             is UIEventHomeScreen.ClickedOnCurrentWeather -> {
                 uiState.selectedCity?.let {
-                    navigationController.navigateTo(NavigationRoute.WeatherDetailsRoute(
-                        detailParams = WeatherParams(
-                            location = it,
-                            weather = uiState.currentWeather
+                    navigationController.navigateTo(
+                        NavigationRoute.WeatherDetailsRoute(
+                            detailParams = WeatherParams(
+                                location = it,
+                                weather = uiState.currentWeather
+                            )
                         )
-                    ))
+                    )
                 }
             }
         }
@@ -111,20 +131,12 @@ class HomeScreenViewModel(
                 newState = uiState.copy(citiesFromQuery = cities)
             }
         }
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val result = repository.getCurrentWeather(location.latitude, location.longitude)
-//            result.onSuccess {
-//                println("Location loaded : $it")
-//            }
-//            result.onFailure {
-//                println("Location failure : $it")
-//            }
-//        }
     }
 
 
     companion object {
-        val DEFAULT_UI_STATE = UIStateHomeScreen(citiesFromQuery = emptyList(), forecastedWeather = emptyList())
+        val DEFAULT_UI_STATE =
+            UIStateHomeScreen(citiesFromQuery = emptyList(), forecastedWeather = emptyList())
     }
 }
 

@@ -1,5 +1,6 @@
 package com.husky.weatherapp.presentation.base
 
+import android.location.Location
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
@@ -30,8 +31,14 @@ abstract class BaseViewModel<UIState, UIEvent> :
 
     open fun handleLifecycleState(lifecycleState: Lifecycle.State) {
         when (lifecycleState) {
-            Lifecycle.State.CREATED -> {handleCreated()}
-            Lifecycle.State.STARTED -> {handleStarted()}
+            Lifecycle.State.CREATED -> {
+                handleCreated()
+            }
+
+            Lifecycle.State.STARTED -> {
+                handleStarted()
+            }
+
             Lifecycle.State.RESUMED -> handleResumed()
             else -> {}
         }

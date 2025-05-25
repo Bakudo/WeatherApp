@@ -8,19 +8,20 @@ import com.husky.weatherapp.domain.value.CityId
 
 @Composable
 fun CurrentWeatherTile(uiState: UIStateHomeScreen, onWeatherClick: OnClickId) {
-    uiState.selectedCity?.let { city ->
-        uiState.currentWeather?.let { weather ->
-            val conditions = WeatherCodeMapper.getWeatherCondition(weather.weather_code)
-            WeatherTile(
-                modifier = Modifier.clickable {
+    uiState.currentWeather?.let { weather ->
+        val conditions = WeatherCodeMapper.getWeatherCondition(weather.weather_code)
+        WeatherTile(
+            modifier = Modifier.clickable {
+                uiState.selectedCity?.let { city ->
                     onWeatherClick(CityId(city.id))
-                },
-                location = city.getDisplayName(),
-                weather.temperature_2m.toString(),
-                conditions.description,
-                conditions.icon
-            )
-        }
+                }
+            },
+            location = uiState.selectedCity?.getDisplayName()
+                ?: "${uiState.currentLocation?.latitude} ${uiState.currentLocation?.longitude}",
+            weather.temperature_2m.toString(),
+            conditions.description,
+            conditions.icon
+        )
     }
 }
 
