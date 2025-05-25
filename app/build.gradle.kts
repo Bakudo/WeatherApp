@@ -40,6 +40,7 @@ android {
 }
 
 dependencies {
+    // Existing dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -55,9 +56,12 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.play.services.location)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
     testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.koin.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

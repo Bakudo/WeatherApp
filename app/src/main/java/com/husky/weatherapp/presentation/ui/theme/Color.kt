@@ -1,4 +1,4 @@
-package com.husky.weatherapp.ui.theme
+package com.husky.weatherapp.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
