@@ -49,6 +49,7 @@ class HomeScreenViewModel(
     }
 
     fun loadCurrentForecast(location: Location) {
+        newState = uiState.copy(dataState = DataState.LOADING)
         viewModelScope.launch(Dispatchers.IO) {
             val result = getWeatherForCity.locationOnly(location)
             result.onSuccess {
@@ -58,6 +59,7 @@ class HomeScreenViewModel(
                         currentWeather = it.current,
                         forecastedWeather = it.daily?.toObjectsList() ?: emptyList()
                     )
+                newState = uiState.copy(dataState = DataState.IDLE)
                 println("Weather $it")
             }
             result.onFailure {
@@ -109,6 +111,7 @@ class HomeScreenViewModel(
     }
 
     private fun fetchWeatherForSelectedCity() {
+        newState = uiState.copy(dataState = DataState.LOADING)
         uiState.selectedCity?.let { city ->
             viewModelScope.launch(Dispatchers.IO) {
                 val weather = getWeatherForCity.invoke(city)
@@ -118,6 +121,7 @@ class HomeScreenViewModel(
                             currentWeather = it.current,
                             forecastedWeather = it.daily?.toObjectsList() ?: emptyList()
                         )
+                    newState = uiState.copy(dataState = DataState.IDLE)
                     println("Weather $it")
                 }
             }
