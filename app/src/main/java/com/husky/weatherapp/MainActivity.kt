@@ -11,7 +11,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.husky.weatherapp.presentation.navigation.NavigationController
+import com.husky.weatherapp.presentation.navigation.NavigationControllerImpl
+import com.husky.weatherapp.presentation.navigation.graph.RootGraph
 import com.husky.weatherapp.presentation.ui.theme.WeatherAppTheme
+import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,28 +25,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                    innerPadding
+                    val navController = koinInject<NavigationController>()
+                    val navHostController = rememberNavController()
+                    (navController as? NavigationControllerImpl)?.setNavController(
+                        navHostController
                     )
+                    RootGraph(navController = navHostController)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WeatherAppTheme {
-        Greeting("Android")
     }
 }

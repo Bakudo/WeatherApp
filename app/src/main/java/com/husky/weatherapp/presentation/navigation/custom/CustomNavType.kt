@@ -4,7 +4,7 @@ import com.husky.weatherapp.presentation.navigation.route.WeatherParams
 import kotlin.reflect.typeOf
 
 object CustomNavType {
-    val MemeEditorNavType = SerializableNavType<WeatherParams>(
+    val WeatherDetailsNavType = SerializableNavType<WeatherParams>(
         type = typeOf<WeatherParams>(),
         isNullableAllowed = false
     )
