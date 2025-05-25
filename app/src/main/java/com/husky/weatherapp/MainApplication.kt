@@ -1,6 +1,7 @@
 package com.husky.weatherapp
 
 import android.app.Application
+import com.husky.weatherapp.di.dataModuleInjections
 import com.husky.weatherapp.di.presentationModuleInjections
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -16,7 +17,8 @@ class MainApplication : Application() {
             androidContext(this@MainApplication)
             modules(
                 listOf(
-                    presentationModuleInjections
+                    presentationModuleInjections,
+                    dataModuleInjections
                 )
             )
         }
