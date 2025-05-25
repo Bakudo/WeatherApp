@@ -1,14 +1,11 @@
 package com.husky.weatherapp.presentation.screen.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.unit.dp
 import com.husky.weatherapp.presentation.screen.ui.SearchBarRow
@@ -16,7 +13,7 @@ import com.husky.weatherapp.presentation.screen.ui.UISearchEvent
 
 @Composable
 fun HomeScreenContent(uiState: UIStateHomeScreen, onEvent: OnUIEventHomeScreen) {
-    Column(Modifier.background(color = Green.copy(.3f))) {
+    Column(Modifier) {
 
         SearchBarRow(uiState.cityQuery) { searchEvent ->
             when (searchEvent) {
@@ -25,14 +22,10 @@ fun HomeScreenContent(uiState: UIStateHomeScreen, onEvent: OnUIEventHomeScreen) 
             }
         }
 
-        CityResultList(uiState.citiesFromQuery) { }
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Box(
-            Modifier
-                .size(60.dp)
-                .background(color = Color.Red.copy(.4f))
-                .clickable {
-                    onEvent(UIEventHomeScreen.CityQuery(""))
-                })
+        CityResultList(uiState.citiesFromQuery) {
+            onEvent(UIEventHomeScreen.CitySelected(it))
+        }
     }
 }
