@@ -1,6 +1,7 @@
 package com.husky.weatherapp.presentation.base
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.navigation.toRoute
 import com.husky.weatherapp.presentation.navigation.NavigationController
@@ -26,6 +27,20 @@ abstract class BaseViewModel<UIState, UIEvent> :
     init {
         handleNavigation()
     }
+
+    open fun handleLifecycleState(lifecycleState: Lifecycle.State) {
+        when (lifecycleState) {
+            Lifecycle.State.CREATED -> {handleCreated()}
+            Lifecycle.State.STARTED -> {handleStarted()}
+            Lifecycle.State.RESUMED -> handleResumed()
+            else -> {}
+        }
+    }
+
+    protected open fun handleResumed() {}
+    protected open fun handleCreated() {}
+    protected open fun handleStarted() {}
+
 
     /**
      * shortcut for setting value to state

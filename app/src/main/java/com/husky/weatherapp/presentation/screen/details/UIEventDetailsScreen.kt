@@ -4,4 +4,4 @@ sealed interface UIEventDetailsScreen {
     data object Placeholder : UIEventDetailsScreen
 }
 
-typealias OnUIEventHomeScreen = (UIEventDetailsScreen) -> Unit
+typealias OnUIEventDetailsScreen = (UIEventDetailsScreen) -> Unit

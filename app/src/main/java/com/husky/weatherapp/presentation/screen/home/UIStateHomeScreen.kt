@@ -1,3 +1,5 @@
 package com.husky.weatherapp.presentation.screen.home
 
-data class UIStateHomeScreen(val placeholder : String = "")
+import android.location.Location
+
+data class UIStateHomeScreen(val currentLocation : Location? = null)

@@ -28,7 +28,7 @@ fun RootGraph(
     ) {
         composable<HomeRoute> {
             val viewModel: HomeScreenViewModel = koinViewModel()
-            HomeScreen(uiState = viewModel.uiState, onEvent = { viewModel.onEvent(it) })
+            HomeScreen(viewModel, onEvent = viewModel::onEvent)
         }
 
         composable<NavigationRoute.WeatherDetailsRoute>(
