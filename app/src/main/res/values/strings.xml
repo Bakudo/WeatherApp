@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">WeatherApp</string>
     <string name="city_search_placeholder">Enter city name (at least 2 chars)</string>
+    <string name="location">Weather location</string>
+    <string name="temperature">Current temperature</string>
+    <string name="condition">Weather coditions</string>
+    <string name="icon">Icon</string>
 </resources>

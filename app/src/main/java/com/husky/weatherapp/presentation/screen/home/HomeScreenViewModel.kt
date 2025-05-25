@@ -77,6 +77,7 @@ class HomeScreenViewModel(
             viewModelScope.launch(Dispatchers.IO) {
                 val weather = getWeatherForCity.invoke(city)
                 weather.onSuccess {
+                    newState = uiState.copy(currentWeather = it.current)
                     println("Weather $it")
                 }
             }
