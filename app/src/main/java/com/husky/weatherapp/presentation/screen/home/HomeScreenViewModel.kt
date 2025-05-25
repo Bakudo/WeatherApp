@@ -53,7 +53,10 @@ class HomeScreenViewModel(
 
     override fun onEvent(event: UIEventHomeScreen) {
         when (event) {
-            is UIEventHomeScreen.CityQuery -> fetchCityLocations(event.query)
+            is UIEventHomeScreen.CityQuery -> {
+                newState = uiState.copy(cityQuery = event.query)
+                fetchCityLocations(event.query)
+            }
         }
     }
 
@@ -61,10 +64,8 @@ class HomeScreenViewModel(
     private fun fetchCityLocations(cityQuery: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = searchForCityList.invoke(cityQuery)
-            result.onSuccess { res ->
-                res.forEach {
-                    println("${it.admin1} ,${it.admin2}")
-                }
+            result.onSuccess { cities ->
+                newState = uiState.copy(citiesFromQuery = cities)
             }
         }
 //        viewModelScope.launch(Dispatchers.IO) {
@@ -80,6 +81,6 @@ class HomeScreenViewModel(
 
 
     companion object {
-        val DEFAULT_UI_STATE = UIStateHomeScreen(null)
+        val DEFAULT_UI_STATE = UIStateHomeScreen(citiesFromQuery = emptyList())
     }
 }

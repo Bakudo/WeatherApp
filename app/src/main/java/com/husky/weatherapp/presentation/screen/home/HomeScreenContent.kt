@@ -25,6 +25,8 @@ fun HomeScreenContent(uiState: UIStateHomeScreen, onEvent: OnUIEventHomeScreen) 
             }
         }
 
+        CityResultList(uiState.citiesFromQuery) { }
+
         Box(
             Modifier
                 .size(60.dp)
