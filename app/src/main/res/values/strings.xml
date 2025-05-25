@@ -3,6 +3,10 @@
     <string name="city_search_placeholder">Enter city name (at least 2 chars)</string>
     <string name="location">Weather location</string>
     <string name="temperature">Current temperature</string>
-    <string name="condition">Weather coditions</string>
+    <string name="condition">Weather conditions</string>
+    <string name="condition_short">Conditions</string>
     <string name="icon">Icon</string>
+    <string name="date">Date</string>
+    <string name="mintemp">min</string>
+    <string name="maxtemp">max</string>
 </resources>

@@ -3,7 +3,9 @@ package com.husky.weatherapp.presentation.screen.home
 import android.location.Location
 import androidx.lifecycle.viewModelScope
 import com.husky.weatherapp.data.system.LocationService
-import com.husky.weatherapp.domain.usecase.GetWeatherDataByLocation
+import com.husky.weatherapp.domain.model.CurrentWeatherForecast
+import com.husky.weatherapp.domain.model.DailyForecast
+import com.husky.weatherapp.domain.usecase.GetWeatherDataByLocationUseCase
 import com.husky.weatherapp.domain.usecase.SearchForCityList
 import com.husky.weatherapp.presentation.base.BaseViewModel
 import com.husky.weatherapp.presentation.navigation.NavigationController
@@ -14,7 +16,7 @@ class HomeScreenViewModel(
     private val navigationController: NavigationController,
     private val locationProvider: LocationService,
     private val searchForCityList: SearchForCityList,
-    private val getWeatherForCity: GetWeatherDataByLocation,
+    private val getWeatherForCity: GetWeatherDataByLocationUseCase,
 ) : BaseViewModel<UIStateHomeScreen, UIEventHomeScreen>() {
 
     override fun getDefaultUIState(): UIStateHomeScreen = DEFAULT_UI_STATE
@@ -77,7 +79,11 @@ class HomeScreenViewModel(
             viewModelScope.launch(Dispatchers.IO) {
                 val weather = getWeatherForCity.invoke(city)
                 weather.onSuccess {
-                    newState = uiState.copy(currentWeather = it.current)
+                    newState =
+                        uiState.copy(
+                            currentWeather = it.current,
+                            forecastedWeather = it.daily?.toObjectsList() ?: emptyList()
+                        )
                     println("Weather $it")
                 }
             }
@@ -104,6 +110,20 @@ class HomeScreenViewModel(
 
 
     companion object {
-        val DEFAULT_UI_STATE = UIStateHomeScreen(citiesFromQuery = emptyList())
+        val DEFAULT_UI_STATE = UIStateHomeScreen(citiesFromQuery = emptyList(), forecastedWeather = emptyList())
     }
 }
+
+fun DailyForecast.toObjectsList(): List<CurrentWeatherForecast> =
+    buildList<CurrentWeatherForecast> {
+        time.forEachIndexed { index, time ->
+            add(
+                CurrentWeatherForecast(
+                    time = time,
+                    tempMin = temperature_2m_min.getOrElse(index) { 0.0 },
+                    tempMax = temperature_2m_max.getOrElse(index) { 0.0 },
+                    weather_code = weather_code.getOrElse(index) { 0 }
+                )
+            )
+        }
+    }

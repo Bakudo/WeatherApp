@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.husky.weatherapp.data.mapper.WeatherCodeMapper
-import com.husky.weatherapp.data.mapper.WeatherMapper
 import com.husky.weatherapp.presentation.screen.ui.SearchBarRow
 import com.husky.weatherapp.presentation.screen.ui.UISearchEvent
 
@@ -28,16 +26,10 @@ fun HomeScreenContent(uiState: UIStateHomeScreen, onEvent: OnUIEventHomeScreen) 
             onEvent(UIEventHomeScreen.CitySelected(it))
         }
 
-        uiState.selectedCity?.let { city ->
-            uiState.currentWeather?.let { weather ->
-                val conditions = WeatherCodeMapper.getWeatherCondition(weather.weather_code)
-                WeatherTile(
-                    location = city.getDisplayName(),
-                    weather.temperature_2m.toString(),
-                    conditions.description,
-                    conditions.icon
-                )
-            }
+        if (uiState.selectedCity != null) {
+            CurrentWeatherTile(uiState)
+            CurrentCityForecast(uiState)
         }
     }
 }
+
