@@ -27,7 +27,9 @@ fun HomeScreenContent(uiState: UIStateHomeScreen, onEvent: OnUIEventHomeScreen) 
         }
 
         if (uiState.selectedCity != null) {
-            CurrentWeatherTile(uiState)
+            CurrentWeatherTile(uiState) {
+                onEvent(UIEventHomeScreen.ClickedOnCurrentWeather(it))
+            }
             CurrentCityForecast(uiState)
         }
     }

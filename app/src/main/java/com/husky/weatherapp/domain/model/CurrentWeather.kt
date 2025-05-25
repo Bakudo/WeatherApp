@@ -1,5 +1,8 @@
 package com.husky.weatherapp.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CurrentWeather(
     val temperature_2m: Double,
     val relative_humidity_2m: Int,

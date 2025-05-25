@@ -1,6 +1,7 @@
 package com.husky.weatherapp.presentation.navigation.route
 
-import com.husky.weatherapp.domain.entity.WeatherDetailsEntity
+import com.husky.weatherapp.domain.model.CurrentWeather
+import com.husky.weatherapp.domain.model.LocationEntity
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,4 +15,7 @@ sealed interface NavigationRoute {
 }
 
 @Serializable
-data class WeatherParams(val data: WeatherDetailsEntity? = null)
+data class WeatherParams(
+    val weather: CurrentWeather? = null,
+    val location: LocationEntity? = null,
+)

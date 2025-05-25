@@ -1,5 +1,8 @@
 package com.husky.weatherapp.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class LocationEntity(
     val id: Int,
     val name: String,

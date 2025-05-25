@@ -3,12 +3,15 @@ package com.husky.weatherapp.presentation.screen.home
 import android.location.Location
 import androidx.lifecycle.viewModelScope
 import com.husky.weatherapp.data.system.LocationService
+import com.husky.weatherapp.domain.entity.WeatherDetailsEntity
 import com.husky.weatherapp.domain.model.CurrentWeatherForecast
 import com.husky.weatherapp.domain.model.DailyForecast
 import com.husky.weatherapp.domain.usecase.GetWeatherDataByLocationUseCase
 import com.husky.weatherapp.domain.usecase.SearchForCityList
 import com.husky.weatherapp.presentation.base.BaseViewModel
 import com.husky.weatherapp.presentation.navigation.NavigationController
+import com.husky.weatherapp.presentation.navigation.route.NavigationRoute
+import com.husky.weatherapp.presentation.navigation.route.WeatherParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -61,7 +64,7 @@ class HomeScreenViewModel(
             }
 
             is UIEventHomeScreen.CitySelected -> {
-                uiState.citiesFromQuery.firstOrNull { it.id == event.cityId }?.let { selectedCity ->
+                uiState.citiesFromQuery.firstOrNull { it.id == event.cityId.id }?.let { selectedCity ->
                     newState = uiState.copy(
                         selectedCity = selectedCity,
                         cityQuery = null,
@@ -69,6 +72,17 @@ class HomeScreenViewModel(
                     )
                     println("City selected: ${selectedCity.getDisplayName()}")
                     fetchWeatherForSelectedCity()
+                }
+            }
+
+            is UIEventHomeScreen.ClickedOnCurrentWeather -> {
+                uiState.selectedCity?.let {
+                    navigationController.navigateTo(NavigationRoute.WeatherDetailsRoute(
+                        detailParams = WeatherParams(
+                            location = it,
+                            weather = uiState.currentWeather
+                        )
+                    ))
                 }
             }
         }

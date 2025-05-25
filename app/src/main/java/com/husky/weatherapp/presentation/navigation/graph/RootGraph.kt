@@ -38,9 +38,9 @@ fun RootGraph(
         ) { backStackEntry ->
             val navParams = backStackEntry.toRoute<NavigationRoute.WeatherDetailsRoute>()
             val viewModel: DetailsScreenViewModel = koinViewModel {
-                parametersOf(navParams.detailParams.data)
+                parametersOf(navParams.detailParams.weather)
             }
-            DetailsScreen(uiState = viewModel.uiState, onEvent = { viewModel.onEvent(it) })
+            DetailsScreen(viewModel, onEvent = { viewModel.onEvent(it) })
         }
     }
 }

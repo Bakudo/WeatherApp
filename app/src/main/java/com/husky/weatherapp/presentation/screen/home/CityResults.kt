@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.unit.dp
 import com.husky.weatherapp.domain.model.LocationEntity
+import com.husky.weatherapp.domain.value.CityId
 
 @Composable
 fun CityResultList(cities: List<LocationEntity>, onClickId: OnClickId) {
@@ -38,7 +39,7 @@ fun CityResultItem(location: LocationEntity, onClick: OnClickId) {
             .fillMaxWidth()
             .background(shape = RoundedCornerShape(8.dp), color = White)
             .padding(horizontal = 8.dp)
-            .clickable { onClick(location.id) },
+            .clickable { onClick(CityId(location.id)) },
         contentAlignment = Alignment.CenterStart
     ) {
         Text(location.getDisplayName())
@@ -46,4 +47,4 @@ fun CityResultItem(location: LocationEntity, onClick: OnClickId) {
 }
 
 
-typealias OnClickId = (Int) -> Unit
+typealias OnClickId = (CityId) -> Unit

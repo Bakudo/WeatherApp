@@ -1,9 +1,11 @@
 package com.husky.weatherapp.presentation.screen.details
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.husky.weatherapp.presentation.base.ScreenHolder
 
 @Composable
-fun DetailsScreen(uiState: UIStateDetailsScreen, onEvent: OnUIEventDetailsScreen) {
-    Text("This is home screen with state : $uiState")
+fun DetailsScreen(viewModel: DetailsScreenViewModel, onEvent: OnUIEventDetailsScreen) {
+    ScreenHolder(viewModel) {
+        WeatherDetailsScreenContent(viewModel.uiState, onEvent)
+    }
 }
