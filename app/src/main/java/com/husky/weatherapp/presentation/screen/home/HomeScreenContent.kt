@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.husky.weatherapp.presentation.screen.home.UIEventHomeScreen.CityQuery
+import com.husky.weatherapp.presentation.screen.home.UIEventHomeScreen.CitySelected
+import com.husky.weatherapp.presentation.screen.home.UIEventHomeScreen.ClickedOnCurrentWeather
+import com.husky.weatherapp.presentation.screen.home.UIEventHomeScreen.PressedEnterOnSearchBar
 import com.husky.weatherapp.presentation.screen.ui.SearchBarRow
 import com.husky.weatherapp.presentation.screen.ui.UISearchEvent
 
@@ -13,22 +17,23 @@ import com.husky.weatherapp.presentation.screen.ui.UISearchEvent
 fun HomeScreenContent(uiState: UIStateHomeScreen, onEvent: OnUIEventHomeScreen) {
     Column(Modifier) {
 
-        SearchBarRow(uiState.cityQuery) { searchEvent ->
+        SearchBarRow(uiState.cityQuery,uiState.lastUsedQueries,uiState.canShowLastUsedQueries) { searchEvent ->
             when (searchEvent) {
                 UISearchEvent.OnClearClicked -> {}
-                is UISearchEvent.UserInput -> onEvent(UIEventHomeScreen.CityQuery(searchEvent.query))
+                is UISearchEvent.UserInput -> onEvent(CityQuery(searchEvent.query))
+                UISearchEvent.OnUserEnterPressed -> onEvent(PressedEnterOnSearchBar)
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         CityResultList(uiState.citiesFromQuery) {
-            onEvent(UIEventHomeScreen.CitySelected(it))
+            onEvent(CitySelected(it))
         }
 
         if (uiState.currentWeather != null) {
             CurrentWeatherTile(uiState) {
-                onEvent(UIEventHomeScreen.ClickedOnCurrentWeather(it))
+                onEvent(ClickedOnCurrentWeather(it))
             }
             CurrentCityForecast(uiState)
         }

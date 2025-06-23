@@ -9,8 +9,7 @@ import com.husky.weatherapp.domain.usecase.GetWeatherDataByLocationUseCase
 import com.husky.weatherapp.domain.usecase.SearchForCityList
 import com.husky.weatherapp.presentation.base.BaseViewModel
 import com.husky.weatherapp.presentation.navigation.NavigationController
-import com.husky.weatherapp.presentation.navigation.route.NavigationRoute
-import com.husky.weatherapp.presentation.navigation.route.NavigationRoute.*
+import com.husky.weatherapp.presentation.navigation.route.NavigationRoute.WeatherDetailsRoute
 import com.husky.weatherapp.presentation.navigation.route.WeatherParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,7 +43,8 @@ class HomeScreenViewModel(
 
             }
             location.onFailure {
-                newState = uiState.copy(dataState = DataState.ERROR("Problem with fetching location"))
+                newState =
+                    uiState.copy(dataState = DataState.ERROR("Problem with fetching location"))
                 println(it)
             }
         }
@@ -82,6 +82,7 @@ class HomeScreenViewModel(
             is UIEventHomeScreen.CityQuery -> {
                 newState = uiState.copy(cityQuery = event.query)
                 fetchCityLocations(event.query)
+                newState = uiState.updateQuerryVisibility()
             }
 
             is UIEventHomeScreen.CitySelected -> {
@@ -114,6 +115,11 @@ class HomeScreenViewModel(
                 newState = uiState.copy(dataState = DataState.IDLE)
             }
 
+            is UIEventHomeScreen.PressedEnterOnSearchBar -> {
+                val query = uiState.cityQuery ?: return
+                newState = uiState.addQuery(query)
+                newState = uiState.updateQuerryVisibility()
+            }
         }
     }
 
@@ -131,7 +137,7 @@ class HomeScreenViewModel(
                     newState = uiState.copy(dataState = DataState.IDLE)
                     println("Weather $it")
                 }
-                weather.onFailure {exception->
+                weather.onFailure { exception ->
                     println("Fetch weather error : $exception")
                     newState = uiState.copy(dataState = DataState.ERROR("$exception"))
                 }
@@ -145,7 +151,7 @@ class HomeScreenViewModel(
             result.onSuccess { cities ->
                 newState = uiState.copy(citiesFromQuery = cities)
             }
-            result.onFailure {exception->
+            result.onFailure { exception ->
                 println(exception)
             }
         }
